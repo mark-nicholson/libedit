@@ -160,10 +160,6 @@ fi
 
 # check for libbsd and bsd/string.h on linux systems
 AC_CHECK_HEADERS([bsd/string.h])
-#AC_CHECK_LIB(bsd, strlcpy)
-#AC_CHECK_LIB(bsd, strlcat)
-#AC_CHECK_LIB(bsd, vis)
-#AC_CHECK_LIB(bsd, unvis)
 
 
 EL_GETPW_R_POSIX
