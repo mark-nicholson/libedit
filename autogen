@@ -19,5 +19,8 @@ rm -rf 	Makefile.in \
 	missing \
 	src/Makefile.in
 
-# re-run the configurator and replace what is needed
-autoreconf --install
+
+# re-run the configurator and replace what is needed if not cleaning.
+if test "x$1" != "x--clean"; then
+  autoreconf --install
+fi
