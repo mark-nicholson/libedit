@@ -1,6 +1,14 @@
    * See also NetBSD changelog:
 	http://cvsweb.netbsd.org/bsdweb.cgi/src/lib/libedit
 
+2018-03-14 Mark Nicholson
+
+   * version-info: 0:56:1
+
+   * configure.ac: Add support for libbsd for 4 routines
+
+   * autogen: Created utility to easily reconfigure autotools
+
 2017-03-29 Jess Thrysoee
 
    * version-info: 0:56:0
