@@ -46,10 +46,14 @@ AC_PROG_LN_S
 AC_PROG_AWK
 EL_MANTYPE
 
-AC_CHECK_LIB(ncurses, tgetent,,
-  [AC_CHECK_LIB(curses, tgetent,,
-    [AC_CHECK_LIB(termcap, tgetent,,
-      [AC_MSG_ERROR([libncurses, libcurses, or libtermcap is required!])]
+AC_CHECK_LIB(tinfo, tgetent,,
+  [AC_CHECK_LIB(ncursesw, tgetent,,
+    [AC_CHECK_LIB(ncurses, tgetent,,
+      [AC_CHECK_LIB(curses, tgetent,,
+        [AC_CHECK_LIB(termcap, tgetent,,
+          [AC_MSG_ERROR([libtinfo, libncursesw, libncurses, libcurses, or libtermcap is required!])]
+        )]
+      )]
     )]
   )]
 )
@@ -119,21 +123,47 @@ AC_TYPE_SIGNAL
 AC_FUNC_STAT
 AC_CHECK_FUNCS([endpwent isascii memchr memset re_comp regcomp strcasecmp strchr strcspn strdup strerror strrchr strstr strtol issetugid wcsdup strlcpy strlcat getline vis strvis strunvis __secure_getenv secure_getenv])
 
+save_LIBS="$LIBS"
+
 # strlcpy
-AC_CHECK_FUNC(strlcpy, found_strlcpy=yes, found_strlcpy=no)
+AC_CHECK_FUNC(strlcpy, found_strlcpy=yes,
+	[AC_CHECK_LIB(bsd, strlcpy, found_strlcpy=yes, found_strlcpy=no)])
 AM_CONDITIONAL(HAVE_STRLCPY, [test "x$found_strlcpy" = xyes])
 
 # strlcat
-AC_CHECK_FUNC(strlcat, found_strlcat=yes, found_strlcat=no)
+AC_CHECK_FUNC(strlcat, found_strlcat=yes,
+	[AC_CHECK_LIB(bsd, strlcat, found_strlcat=yes, found_strlcat=no)])
 AM_CONDITIONAL(HAVE_STRLCAT, [test "x$found_strlcat" = xyes])
 
 # vis
-AC_CHECK_FUNC(vis, found_vis=yes, found_vis=no)
+AC_CHECK_FUNC(vis, found_vis=yes,
+	[AC_CHECK_LIB(bsd, vis, found_vis=yes, found_vis=no)])
 AM_CONDITIONAL(HAVE_VIS, [test "x$found_vis" = xyes])
 
 # unvis
-AC_CHECK_FUNC(unvis, found_unvis=yes, found_unvis=no)
+AC_CHECK_FUNC(unvis, found_unvis=yes,
+	[AC_CHECK_LIB(bsd, vis, found_unvis=yes, found_unvis=no)])
 AM_CONDITIONAL(HAVE_UNVIS, [test "x$found_unvis" = xyes])
+
+
+if test    "x$ac_cv_lib_bsd_strlcat" = "xyes" \
+        -o "x$ac_cv_lib_bsd_strlcpy" = "xyes" \
+	-o "x$ac_cv_lib_bsd_vis" = "xyes" \
+	-o "x$ac_cv_lib_bsd_unvis" = "xyes"; then
+  AC_MSG_NOTICE([ADDING libbsd to LIBS])
+  LIBS="-lbsd $save_LIBS"
+else
+  AC_MSG_NOTICE([NOT adding libbsd to LIBS])
+  LIBS="$save_LIBS"
+fi
+
+
+# check for libbsd and bsd/string.h on linux systems
+AC_CHECK_HEADERS([bsd/string.h])
+#AC_CHECK_LIB(bsd, strlcpy)
+#AC_CHECK_LIB(bsd, strlcat)
+#AC_CHECK_LIB(bsd, vis)
+#AC_CHECK_LIB(bsd, unvis)
 
 
 EL_GETPW_R_POSIX
