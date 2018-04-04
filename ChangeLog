@@ -1,6 +1,10 @@
    * See also NetBSD changelog:
 	http://cvsweb.netbsd.org/bsdweb.cgi/src/lib/libedit
 
+2018-04-04 Mark Nicholson
+
+   * version-info: Reverting back to 0:56:0 due to build issues
+
 2018-03-14 Mark Nicholson
 
    * version-info: 0:56:1
